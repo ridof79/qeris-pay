@@ -1,5 +1,7 @@
 package com.enigma.qerispay.entiy.transaction;
 
+import com.enigma.qerispay.dto.ETransactionType;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class TransactionType {
     @Id
     @Column(name = "id_transaction_type")
@@ -19,5 +22,5 @@ public class TransactionType {
     @GenericGenerator(name = "UUID",strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
-    private String transaction_type;
+    private ETransactionType transactionType;
 }

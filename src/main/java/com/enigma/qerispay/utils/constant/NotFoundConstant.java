@@ -12,4 +12,6 @@ public class NotFoundConstant {
 
     public static final String MERCHANT_NOT_FOUND = "Merchant with id: %s not found";
     public static final String MERCHANT_NIB_NOT_FOUND = "Merchant with NIB: %s not found";
+    public static final String TRX_CASHBACK_NOT_FOUND = "Transaction cashback with id: %s not found";
+    public static final String TRX_NOT_FOUND = "Transaction with id: %s not found";
 }
