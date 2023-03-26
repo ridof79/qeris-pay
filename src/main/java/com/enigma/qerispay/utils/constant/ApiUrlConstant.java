@@ -5,4 +5,5 @@ public class ApiUrlConstant {
     public static final String MERCHANT_PATH = "/merchants";
     public static final String TOP_UP_PATH = "/top-up";
     public static final String PAYMENT_QR_PATH = "/payment-qr";
+    public static final String FILE_PATH = "/files";
 }
