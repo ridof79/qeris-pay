@@ -43,7 +43,8 @@ public class Merchant {
     @Column
     private Date birthDate;
 
-    @Column
+
     @OneToOne
+    @JoinColumn(name = "id_wallet")
     private Wallet wallet;
 }

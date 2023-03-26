@@ -40,7 +40,7 @@ public class Customer {
     @Column
     private Date birthDate;
 
-    @Column
     @OneToOne
+    @JoinColumn(name = "id_wallet")
     private Wallet wallet;
 }
