@@ -40,10 +40,6 @@ public class Merchant {
     @Column
     private String merchantNIB;
 
-    @Column
-    private Date birthDate;
-
-
     @OneToOne
     @JoinColumn(name = "id_wallet")
     private Wallet wallet;

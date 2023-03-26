@@ -9,4 +9,7 @@ public class NotFoundConstant {
     public static final String WALLET_NOT_FOUND = "Wallet not found for id: %s";
 
     public static final String CUSTOMER_PHONE_NOT_FOUND = "Customer with phone: %s not found";
+
+    public static final String MERCHANT_NOT_FOUND = "Merchant with id: %s not found";
+    public static final String MERCHANT_NIB_NOT_FOUND = "Merchant with NIB: %s not found";
 }
