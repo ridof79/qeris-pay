@@ -11,7 +11,7 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name =  "trx_transaction")
+@Table(name = "trx_transaction")
 @Getter
 @Setter
 @NoArgsConstructor

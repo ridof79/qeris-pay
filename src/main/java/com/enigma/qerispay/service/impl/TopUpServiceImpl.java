@@ -7,6 +7,8 @@ import com.enigma.qerispay.entiy.Wallet;
 import com.enigma.qerispay.entiy.transaction.Transaction;
 import com.enigma.qerispay.entiy.transaction.TransactionType;
 import com.enigma.qerispay.service.*;
+import com.enigma.qerispay.utils.constant.NotFoundConstant;
+import com.enigma.qerispay.utils.exception.DataNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,21 +23,26 @@ public class TopUpServiceImpl implements TopUpService {
 
     @Override
     public TopUpDTO customerTopUp(TopUpDTO topUpDTO) {
-        Transaction topUpTransaction = new Transaction();
+        if (customerService.getCustomerById(topUpDTO.getCustomer().getId())!=null) {
+            Customer customer = customerService.getCustomerById(topUpDTO.getCustomer().getId());
 
-        topUpTransaction.setAmount(topUpDTO.getAmount());
-        topUpTransaction.setCustomer(topUpDTO.getCustomer());
+            Transaction topUpTransaction = new Transaction();
 
-        TransactionType type = transactionTypeService.getOrSave(ETransactionType.TOP_UP);
+            topUpTransaction.setAmount(topUpDTO.getAmount());
+            topUpTransaction.setCustomer(topUpDTO.getCustomer());
 
-        topUpTransaction.setType(type);
-        transactionService.addTransaction(topUpTransaction);
+            TransactionType type = transactionTypeService.getOrSave(ETransactionType.TOP_UP);
 
-        Wallet wallet = walletService.getWalletById(customerService.getCustomerById(topUpDTO.getCustomer().getId()).getWallet().getId());
+            topUpTransaction.setType(type);
+            transactionService.addTransaction(topUpTransaction);
 
-        wallet.setBalance(wallet.getBalance()+topUpDTO.getAmount());
-        walletService.updateWallet(wallet);
+            Wallet wallet = walletService.getWalletById(customer.getWallet().getId());
 
-        return topUpDTO;
+            wallet.setBalance(wallet.getBalance() + topUpDTO.getAmount());
+            walletService.updateWallet(wallet);
+            return topUpDTO;
+        } else {
+            throw new DataNotFoundException(String.format(NotFoundConstant.CUSTOMER_NOT_FOUND, topUpDTO.getCustomer().getId()));
+        }
     }
 }
