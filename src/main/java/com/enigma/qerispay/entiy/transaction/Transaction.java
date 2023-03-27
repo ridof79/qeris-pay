@@ -2,6 +2,7 @@ package com.enigma.qerispay.entiy.transaction;
 
 import com.enigma.qerispay.entiy.Customer;
 import com.enigma.qerispay.entiy.Merchant;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.sql.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Transaction {
     @Id
     @Column(name = "id_transaction")

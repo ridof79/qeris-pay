@@ -1,6 +1,7 @@
 package com.enigma.qerispay.controller;
 
 import com.enigma.qerispay.dto.TopUpDTO;
+import com.enigma.qerispay.dto.TopUpMerchantDTO;
 import com.enigma.qerispay.entiy.Customer;
 import com.enigma.qerispay.entiy.Merchant;
 import com.enigma.qerispay.service.TopUpService;
@@ -22,11 +23,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class TopUpController {
     TopUpService topUpService;
 
-    @PostMapping
+    @PostMapping("/customer")
     public ResponseEntity<Response<TopUpDTO>> saveMerchant(@RequestBody TopUpDTO topUpDTO) {
         Response<TopUpDTO> response = new Response<>();
         response.setMessage(InsertDataConstant.INSERT_BALANCE_SUCCES);
         response.setData(topUpService.customerTopUp(topUpDTO));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    @PostMapping("/merchantr")
+    public ResponseEntity<Response<TopUpMerchantDTO>> saveMerchant(@RequestBody TopUpMerchantDTO topUpMerchantDTO) {
+        Response<TopUpMerchantDTO> response = new Response<>();
+        response.setMessage(InsertDataConstant.INSERT_BALANCE_SUCCES);
+        response.setData(topUpService.merchantTopUp(topUpMerchantDTO));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
