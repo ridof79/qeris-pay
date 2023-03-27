@@ -14,4 +14,5 @@ public class RequestPaymentMerchantDTO {
 
     private Merchant merchant;
     private Integer amount;
+    private Integer cashback;
 }
