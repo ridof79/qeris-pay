@@ -6,6 +6,7 @@ import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.customResponse.ResponseFile;
 import com.enigma.qerispay.utils.customResponse.ResponseMessage;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class FileController {
 
-    FIleStorageService storageService;
+    private final FIleStorageService storageService;
 
     @PostMapping("/upload")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
@@ -58,12 +60,16 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
-    @GetMapping("/files/{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String id) {
-        FileStorage fileDB = storageService.getFile(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String id, HttpServletResponse response) throws IOException {
+        FileStorage fileStorage = storageService.getFile(id);
+
+        ByteArrayResource resource = new ByteArrayResource(fileStorage.getData());
+        response.setContentType(fileStorage.getType());
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileStorage.getName() + "\"");
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
-                .body(fileDB.getData());
+                .contentLength(resource.contentLength())
+                .body(resource);
     }
 }

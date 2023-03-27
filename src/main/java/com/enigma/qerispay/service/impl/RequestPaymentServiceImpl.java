@@ -6,14 +6,17 @@ import com.enigma.qerispay.dto.RequestPaymentMerchantDTO;
 import com.enigma.qerispay.entiy.Customer;
 import com.enigma.qerispay.entiy.Merchant;
 import com.enigma.qerispay.entiy.Wallet;
+import com.enigma.qerispay.entiy.storage.FileStorage;
 import com.enigma.qerispay.entiy.transaction.Transaction;
 import com.enigma.qerispay.qr.QRCodeGenerator;
 import com.enigma.qerispay.service.*;
 import com.enigma.qerispay.utils.constant.RequestQRFormat;
+import com.enigma.qerispay.utils.customResponse.ResponseFile;
 import com.google.zxing.WriterException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,31 +31,36 @@ public class RequestPaymentServiceImpl implements RequestPaymentService {
     CustomerService customerService;
     TransactionService transactionService;
     TransactionTypeService transactionTypeService;
+    FIleStorageService fIleStorageService;
 
     @Override
-    public String requestPayment(RequestPaymentMerchantDTO requestPaymentMerchantDTO) {
-
+    public ResponseFile requestPayment(RequestPaymentMerchantDTO requestPaymentMerchantDTO) throws IOException, WriterException {
         String merchantId = requestPaymentMerchantDTO.getMerchant().getId();
         Integer amount = requestPaymentMerchantDTO.getAmount();
         String request = String.format(RequestQRFormat.REQUEST_PAYMENT_QR, merchantId, amount.toString());
+        String fileName = String.format(RequestQRFormat.QR_CODE_FILENAME,requestPaymentMerchantDTO.getMerchant().getId(),requestPaymentMerchantDTO.getAmount());
 
-        String imagePath = String.format(RequestQRFormat.QR_CODE_IMAGE_PATH, requestPaymentMerchantDTO.getMerchant().getId());
+        byte[] pngData = QRCodeGenerator.getQRCodeImage(request, 250,250);
+        FileStorage qr = new FileStorage(fileName,"image/png",pngData);
+        fIleStorageService.addFile(qr);
 
-        try {
-            QRCodeGenerator.generateQRCodeImage(request, 250, 250, imagePath);
-        } catch (WriterException | IOException e) {
-            e.printStackTrace();
+        String fileDownloadUri = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/files/")
+                .path(qr.getId())
+                .toUriString();
+
+        return new ResponseFile(
+                qr.getName(),
+                fileDownloadUri,
+                qr.getType(),
+                qr.getData().length);
         }
 
-        return imagePath;
-    }
-
     @Override
-    public RequestPaymentMerchantDTO decodeQRCodeFromMerchant(String qrCodeImage) {
+    public RequestPaymentMerchantDTO decodeQRCodeFromMerchant(File file) {
         try {
-            File file = new File(qrCodeImage);
             String[] resultDecode = decodeQRCode(file).split(",");
-
             return new RequestPaymentMerchantDTO(merchantService.getMerchantById(resultDecode[0]), Integer.parseInt(resultDecode[1]));
 
         } catch (IOException e) {
@@ -64,7 +72,7 @@ public class RequestPaymentServiceImpl implements RequestPaymentService {
     @Override
     @Transactional
     public void makePayment(RequestPaymentCustomerDTO paymentCustomerDTO) {
-        RequestPaymentMerchantDTO requestPaymentMerchantDTO = decodeQRCodeFromMerchant(paymentCustomerDTO.getQrCodePath());
+        RequestPaymentMerchantDTO requestPaymentMerchantDTO = decodeQRCodeFromMerchant(paymentCustomerDTO.getFile());
 
         Merchant merchant = merchantService.getMerchantById(requestPaymentMerchantDTO.getMerchant().getId());
         Customer customer = customerService.getCustomerById(paymentCustomerDTO.getCustomer().getId());

@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class FileStorage {
     @Id
     @Column(name = "id_file")

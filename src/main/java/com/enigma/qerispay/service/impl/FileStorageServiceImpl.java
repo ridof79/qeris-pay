@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -25,6 +28,7 @@ public class FileStorageServiceImpl implements FIleStorageService {
 
         return fileStorageRepository.save(fileStorage);
     }
+
     @Override
     public FileStorage getFile(String id) {
         return fileStorageRepository.findById(id).get();
@@ -35,4 +39,22 @@ public class FileStorageServiceImpl implements FIleStorageService {
         return fileStorageRepository.findAll().stream();
     }
 
+    @Override
+    public FileStorage addFile(FileStorage file) throws IOException {
+        return fileStorageRepository.save(file);
+    }
+
+    @Override
+    public File getFileFromDb(String id) throws IOException {
+        FileStorage fileStorage = fileStorageRepository.findById(id).orElseThrow(() -> new FileNotFoundException("File not found with id " + id));
+        String filename = fileStorage.getName();
+        String tempFileName = System.getProperty("java.io.tmpdir") + "/" + filename;
+        File file = new File(tempFileName);
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            fileOutputStream.write(fileStorage.getData());
+        }
+        return file;
+
+    }
 }

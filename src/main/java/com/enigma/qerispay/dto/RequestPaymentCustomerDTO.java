@@ -7,11 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.File;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestPaymentCustomerDTO {
     private Customer customer;
-    private String qrCodePath;
+    private File file;
 }
