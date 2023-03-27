@@ -1,7 +1,7 @@
 package com.enigma.qerispay.entiy.transaction;
 
 import com.enigma.qerispay.entiy.Customer;
-import com.enigma.qerispay.entiy.Service;
+import com.enigma.qerispay.entiy.Reward;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,8 +30,8 @@ public class TransactionQeris {
     private Date date;
 
     @ManyToOne
-    @JoinColumn(name = "id_service")
-    private Service service;
+    @JoinColumn(name = "id_reward")
+    private Reward reward;
 
     private Integer serviceTransactionPrice;
 }

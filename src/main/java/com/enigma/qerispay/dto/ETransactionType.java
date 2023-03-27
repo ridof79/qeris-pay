@@ -5,5 +5,6 @@ public enum ETransactionType {
     PAY,
     TRANSFER,
     WITHDRAW,
+    CLAIM
 
 }

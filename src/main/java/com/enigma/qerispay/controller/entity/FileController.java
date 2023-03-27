@@ -1,4 +1,4 @@
-package com.enigma.qerispay.controller;
+package com.enigma.qerispay.controller.entity;
 
 import com.enigma.qerispay.entiy.storage.FileStorage;
 import com.enigma.qerispay.service.FIleStorageService;
@@ -39,7 +39,6 @@ public class FileController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
         }
     }
-
 
     @GetMapping("/files")
     public ResponseEntity<List<ResponseFile>> getListFiles() {

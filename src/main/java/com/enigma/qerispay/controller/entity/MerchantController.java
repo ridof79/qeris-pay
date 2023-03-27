@@ -1,4 +1,4 @@
-package com.enigma.qerispay.controller;
+package com.enigma.qerispay.controller.entity;
 
 import com.enigma.qerispay.entiy.Customer;
 import com.enigma.qerispay.entiy.Merchant;
@@ -26,7 +26,7 @@ public class MerchantController {
     }
 
     @PutMapping
-    Merchant updateMerchant(@RequestBody Merchant merchant) {
+    public Merchant updateMerchant(@RequestBody Merchant merchant) {
         return merchantService.updateMerchant(merchant);
     }
 

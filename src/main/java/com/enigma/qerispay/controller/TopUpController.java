@@ -33,7 +33,7 @@ public class TopUpController {
                 .body(response);
     }
 
-    @PostMapping("/merchantr")
+    @PostMapping("/merchant")
     public ResponseEntity<Response<TopUpMerchantDTO>> saveMerchant(@RequestBody TopUpMerchantDTO topUpMerchantDTO) {
         Response<TopUpMerchantDTO> response = new Response<>();
         response.setMessage(InsertDataConstant.INSERT_BALANCE_SUCCES);

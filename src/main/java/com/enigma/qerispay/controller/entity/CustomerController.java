@@ -1,4 +1,4 @@
-package com.enigma.qerispay.controller;
+package com.enigma.qerispay.controller.entity;
 
 import com.enigma.qerispay.entiy.Customer;
 import com.enigma.qerispay.service.CustomerService;
@@ -26,7 +26,7 @@ public class CustomerController {
     }
 
     @PutMapping
-    Customer updateCustomer(@RequestBody Customer customer) {
+    public Customer updateCustomer(@RequestBody Customer customer) {
         return customerService.updateCustomer(customer);
     }
 

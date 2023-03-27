@@ -8,21 +8,21 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "mst_service")
+@Table(name = "mst_reward")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Service {
+public class Reward {
     @Id
-    @Column(name = "id_service")
+    @Column(name = "id_reward")
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID",strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
     @Column
-    private String serviceName;
+    private String rewardName;
 
     @Column
-    private Integer servicePrice;
+    private Integer rewardPrice;
 
 }

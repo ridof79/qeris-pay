@@ -32,7 +32,7 @@ public class RequestPaymentQRController {
         return requestPaymentService.requestPayment(requestPaymentMerchantDTO);
     }
 
-    @GetMapping
+    @PostMapping("/pay")
     public void makePayment(@RequestParam("file") MultipartFile file,
                             @RequestParam String customerID) throws IOException {
 
