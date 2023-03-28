@@ -1,4 +1,4 @@
-package com.enigma.qerispay.service.impl;
+package com.enigma.qerispay.service.impl.entity;
 
 import com.enigma.qerispay.entiy.Reward;
 import com.enigma.qerispay.repository.RewardRepository;

@@ -1,4 +1,4 @@
-package com.enigma.qerispay.service.impl;
+package com.enigma.qerispay.service.impl.entity;
 
 import com.enigma.qerispay.dto.entity.CustomerDTO;
 import com.enigma.qerispay.entiy.Customer;
@@ -36,6 +36,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public CustomerDTO updateCustomer(Customer customer) {
         if (customerRepository.findById(customer.getId()).isPresent()) {
+            Customer customerOld = customerRepository.findById(customer.getId()).get();
+            customer.setPassword(customerOld.getPassword());
+            customer.setUsername(customerOld.getUsername());
+            customer.setEnabled(customerOld.isEnabled());
             Customer customerSaved = saveCustomer(customer);
             return new CustomerDTO(customerSaved);
         } else {

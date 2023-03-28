@@ -7,6 +7,7 @@ import com.enigma.qerispay.service.CustomerService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.constant.InsertDataConstant;
 import com.enigma.qerispay.utils.customResponse.Response;
+import com.enigma.qerispay.utils.exception.UnauthorizedException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 
@@ -57,11 +58,6 @@ public class CustomerController {
     @DeleteMapping("/{id}")
     public void deleteCustomerById(@PathVariable String id, Authentication authentication) {
         customerService.deleteCustomer(id);
-    }
-
-    @GetMapping("/search")
-    public Customer findCustomerByPhone(@RequestParam(name = "phone") String customerPhone) {
-        return customerService.getCustomerByPhone(customerPhone);
     }
 
     @PostMapping

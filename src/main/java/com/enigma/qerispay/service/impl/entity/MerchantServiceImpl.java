@@ -1,4 +1,4 @@
-package com.enigma.qerispay.service.impl;
+package com.enigma.qerispay.service.impl.entity;
 
 import com.enigma.qerispay.dto.entity.MerchantDTO;
 import com.enigma.qerispay.entiy.Merchant;
@@ -38,6 +38,10 @@ public class MerchantServiceImpl implements MerchantService {
     @Transactional
     public MerchantDTO updateMerchant(Merchant merchant) {
         if (merchantRepository.findById(merchant.getId()).isPresent()) {
+            Merchant merchantOld = merchantRepository.findById(merchant.getId()).get();
+            merchant.setPassword(merchantOld.getPassword());
+            merchant.setUsername(merchantOld.getUsername());
+            merchant.setEnabled(merchantOld.isEnabled());
             Merchant merchantSaved = saveMerchant(merchant);
             return new MerchantDTO(merchantSaved);
         } else {

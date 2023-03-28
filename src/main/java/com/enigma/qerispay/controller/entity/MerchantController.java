@@ -48,11 +48,6 @@ public class MerchantController {
         return merchantService.getMerchantById(id);
     }
 
-    @GetMapping("/{nib}")
-    public Merchant getMerchantByNIB(@PathVariable String nib) {
-        return merchantService.getMerchantByNIB(nib);
-    }
-
     @DeleteMapping("/{id}")
     public void deleteMerchantById(@PathVariable String id) {
         merchantService.deleteMerchant(id);

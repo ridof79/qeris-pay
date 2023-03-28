@@ -1,4 +1,4 @@
-package com.enigma.qerispay.controller;
+package com.enigma.qerispay.controller.transaction;
 
 import com.enigma.qerispay.dto.RequestPaymentCustomerDTO;
 import com.enigma.qerispay.dto.RequestPaymentMerchantDTO;

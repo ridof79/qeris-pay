@@ -32,7 +32,7 @@ public class Customer extends User{
     @Column
     private Date birthDate;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_wallet")
     private Wallet wallet;
 }

@@ -8,7 +8,6 @@ import com.enigma.qerispay.service.AuthService;
 import com.enigma.qerispay.service.UserService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.customResponse.Response;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(ApiUrlConstant.AUTH_PATH)
 @AllArgsConstructor
-@SecurityRequirement(name = "Authorization")
 public class AuthController {
 
     private AuthService authService;
@@ -54,7 +52,7 @@ public class AuthController {
     @GetMapping("/verify")
     public ResponseEntity<?> verifyUser(@RequestBody VerificationDTO verificationDTO) {
         if (userService.verify(verificationDTO)) {
-            return new ResponseEntity<>("Verification success.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Verification success.", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Verification failed.", HttpStatus.BAD_REQUEST);
         }

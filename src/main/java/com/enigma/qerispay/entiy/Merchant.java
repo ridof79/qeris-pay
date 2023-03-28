@@ -30,7 +30,7 @@ public class Merchant extends User {
     @Column(name = "merchant_NIB", unique = true)
     private String merchantNIB;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_wallet")
     private Wallet wallet;
 }

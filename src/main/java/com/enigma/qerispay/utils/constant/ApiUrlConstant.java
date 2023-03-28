@@ -9,5 +9,5 @@ public class ApiUrlConstant {
     public static final String SEND_BALANCE_PATH = "/transaction/send-balance";
     public static final String REWARD_PATH = "/transaction/reward" ;
     public static final String FILE_PATH = "/files";
-
+    public static final String SEARCH_PATH = "/search";
 }
