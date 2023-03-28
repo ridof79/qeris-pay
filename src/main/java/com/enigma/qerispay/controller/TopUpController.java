@@ -2,8 +2,6 @@ package com.enigma.qerispay.controller;
 
 import com.enigma.qerispay.dto.TopUpDTO;
 import com.enigma.qerispay.dto.TopUpMerchantDTO;
-import com.enigma.qerispay.entiy.Customer;
-import com.enigma.qerispay.entiy.Merchant;
 import com.enigma.qerispay.service.TopUpService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.constant.InsertDataConstant;

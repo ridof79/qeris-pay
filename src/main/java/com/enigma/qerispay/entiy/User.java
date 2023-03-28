@@ -10,21 +10,27 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "mst_wallet")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class Wallet {
+@NoArgsConstructor
+public abstract class User {
     @Id
-    @Column(name = "id_wallet")
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID",strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
-    @Column
-    private Integer balance;
+    @Column(unique = true)
+    private String username;
 
-    @Column
-    private Integer qerisCoin;
+    private String password;
+
+    private boolean enabled;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "trx_user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    List<Role> roles;
 }

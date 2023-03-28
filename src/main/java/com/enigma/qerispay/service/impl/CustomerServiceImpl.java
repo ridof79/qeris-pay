@@ -1,9 +1,11 @@
 package com.enigma.qerispay.service.impl;
 
+import com.enigma.qerispay.dto.ERole;
 import com.enigma.qerispay.entiy.Customer;
 import com.enigma.qerispay.entiy.Wallet;
 import com.enigma.qerispay.repository.CustomerRepository;
 import com.enigma.qerispay.service.CustomerService;
+import com.enigma.qerispay.service.RoleService;
 import com.enigma.qerispay.service.WalletService;
 import com.enigma.qerispay.utils.constant.NotFoundConstant;
 import com.enigma.qerispay.utils.exception.DataNotFoundException;
@@ -19,6 +21,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     CustomerRepository customerRepository;
     WalletService walletService;
+    RoleService roleService;
 
     @Override
     @Transactional

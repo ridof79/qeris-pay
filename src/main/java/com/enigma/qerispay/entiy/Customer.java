@@ -10,26 +10,18 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "mst_customer")
+@DiscriminatorValue("mst_customer")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
-    @Id
-    @Column(name = "id_customer")
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID",strategy = "org.hibernate.id.UUIDGenerator")
-    private String id;
+public class Customer extends User{
 
-    @Column(nullable = false)
+    @Column
     private String customerName;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String customerEmail;
-
-    @Column(nullable = false)
-    private String password;
 
     @Column
     private String customerAddress;

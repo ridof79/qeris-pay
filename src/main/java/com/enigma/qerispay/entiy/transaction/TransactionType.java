@@ -22,5 +22,6 @@ public class TransactionType {
     @GenericGenerator(name = "UUID",strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
+    @Enumerated(EnumType.STRING)
     private ETransactionType transactionType;
 }
