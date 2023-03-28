@@ -4,9 +4,9 @@ import com.enigma.qerispay.dto.entity.CustomerDTO;
 import com.enigma.qerispay.entiy.Customer;
 import com.enigma.qerispay.entiy.Wallet;
 import com.enigma.qerispay.repository.CustomerRepository;
-import com.enigma.qerispay.service.CustomerService;
-import com.enigma.qerispay.service.RoleService;
-import com.enigma.qerispay.service.WalletService;
+import com.enigma.qerispay.service.entity.CustomerService;
+import com.enigma.qerispay.service.security.RoleService;
+import com.enigma.qerispay.service.entity.WalletService;
 import com.enigma.qerispay.utils.constant.NotFoundConstant;
 import com.enigma.qerispay.utils.exception.DataNotFoundException;
 import lombok.AllArgsConstructor;
@@ -70,9 +70,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomerByPhone(String phoneNumber) {
+    public CustomerDTO getCustomerByPhone(String phoneNumber) {
         if (customerRepository.findCustomerByCustomerPhone(phoneNumber) != null) {
-            return customerRepository.findCustomerByCustomerPhone(phoneNumber);
+            Customer getCustomer = customerRepository.findCustomerByCustomerPhone(phoneNumber);
+            return new CustomerDTO(getCustomer);
         } else {
             throw new DataNotFoundException(String.format(NotFoundConstant.CUSTOMER_PHONE_NOT_FOUND, phoneNumber));
         }

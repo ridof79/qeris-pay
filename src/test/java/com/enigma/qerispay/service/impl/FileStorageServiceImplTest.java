@@ -2,14 +2,12 @@ package com.enigma.qerispay.service.impl;
 
 import com.enigma.qerispay.entiy.storage.FileStorage;
 import com.enigma.qerispay.repository.storage.FileStorageRepository;
+import com.enigma.qerispay.service.impl.file.FileStorageServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class FileStorageServiceImplTest {
 

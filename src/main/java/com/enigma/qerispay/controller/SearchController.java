@@ -1,11 +1,10 @@
 package com.enigma.qerispay.controller;
 
-import com.enigma.qerispay.entiy.Customer;
-import com.enigma.qerispay.entiy.Merchant;
-import com.enigma.qerispay.entiy.Reward;
-import com.enigma.qerispay.service.CustomerService;
-import com.enigma.qerispay.service.MerchantService;
-import com.enigma.qerispay.service.RewardService;
+import com.enigma.qerispay.dto.entity.CustomerDTO;
+import com.enigma.qerispay.dto.entity.MerchantDTO;
+import com.enigma.qerispay.service.entity.CustomerService;
+import com.enigma.qerispay.service.entity.MerchantService;
+import com.enigma.qerispay.service.entity.RewardService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
@@ -22,13 +21,12 @@ public class SearchController {
     RewardService rewardService;
 
     @GetMapping("/customer")
-    public Customer findCustomerByPhone(@RequestParam(name = "phone") String customerPhone) {
+    public CustomerDTO findCustomerByPhone(@RequestParam(name = "phone") String customerPhone) {
         return customerService.getCustomerByPhone(customerPhone);
     }
 
     @GetMapping("/merchant/{nib}")
-    public Merchant getMerchantByNIB(@PathVariable String nib) {
+    public MerchantDTO getMerchantByNIB(@PathVariable String nib) {
         return merchantService.getMerchantByNIB(nib);
     }
-
 }

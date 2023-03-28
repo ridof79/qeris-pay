@@ -1,9 +1,9 @@
 package com.enigma.qerispay.controller.entity;
 
-import com.enigma.qerispay.dto.RewardDTO;
+import com.enigma.qerispay.dto.transaction.RewardDTO;
 import com.enigma.qerispay.entiy.Reward;
-import com.enigma.qerispay.service.RewardService;
-import com.enigma.qerispay.service.TransactionRewardService;
+import com.enigma.qerispay.service.entity.RewardService;
+import com.enigma.qerispay.service.transaction.TransactionRewardService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.constant.InsertDataConstant;
 import com.enigma.qerispay.utils.customResponse.Response;
@@ -28,7 +28,7 @@ public class RewardController {
     @PostMapping
     public ResponseEntity<Response<Reward>> saveReward(@RequestBody Reward reward) {
         Response<Reward> response = new Response<>();
-        response.setMessage(InsertDataConstant.INSERT_REWARD_SUCCES);
+        response.setMessage(InsertDataConstant.INSERT_REWARD_SUCCESS);
         response.setData(rewardService.saveReward(reward));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)

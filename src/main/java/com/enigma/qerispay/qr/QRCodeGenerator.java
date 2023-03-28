@@ -1,5 +1,6 @@
 package com.enigma.qerispay.qr;
 
+import com.enigma.qerispay.utils.constant.NotFoundConstant;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageConfig;
@@ -50,7 +51,7 @@ public class QRCodeGenerator {
             Result result = new MultiFormatReader().decode(bitmap);
             return result.getText();
         } catch (NotFoundException e) {
-            System.out.println("There is no QR code in the image");
+            System.out.println(NotFoundConstant.NO_QR_CODE);
             return null;
         }
     }

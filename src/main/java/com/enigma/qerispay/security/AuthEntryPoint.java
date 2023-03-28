@@ -1,5 +1,6 @@
 package com.enigma.qerispay.security;
 
+import com.enigma.qerispay.utils.constant.ControllerConstant;
 import com.enigma.qerispay.utils.customResponse.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         Response<String> customResponse = new Response<>();
-        customResponse.setMessage("Unauthorized, please login!");
+        customResponse.setMessage(ControllerConstant.UNAUTHORIZED);
 
         log.error("Unauthorized error : {}", authException.getMessage());
         response.setContentType("application/json");

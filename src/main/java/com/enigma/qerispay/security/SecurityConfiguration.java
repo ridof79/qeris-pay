@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers("/files/download/**").permitAll()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/users/**").access("(hasRole('ROLE_ADMIN') or @userSecurity.hasUserId(authentication, #userId))")
                 .anyRequest().authenticated().and()

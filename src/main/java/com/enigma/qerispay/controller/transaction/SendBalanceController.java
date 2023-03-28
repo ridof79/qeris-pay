@@ -1,7 +1,7 @@
 package com.enigma.qerispay.controller.transaction;
 
-import com.enigma.qerispay.dto.SendBalanceDTO;
-import com.enigma.qerispay.service.CustomerSendBalanceService;
+import com.enigma.qerispay.dto.transaction.SendBalanceDTO;
+import com.enigma.qerispay.service.transaction.CustomerSendBalanceService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.constant.TransactionConstant;
 import com.enigma.qerispay.utils.customResponse.Response;

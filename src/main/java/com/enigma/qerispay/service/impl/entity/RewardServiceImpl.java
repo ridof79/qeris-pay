@@ -2,7 +2,7 @@ package com.enigma.qerispay.service.impl.entity;
 
 import com.enigma.qerispay.entiy.Reward;
 import com.enigma.qerispay.repository.RewardRepository;
-import com.enigma.qerispay.service.RewardService;
+import com.enigma.qerispay.service.entity.RewardService;
 import com.enigma.qerispay.utils.constant.NotFoundConstant;
 import com.enigma.qerispay.utils.exception.DataNotFoundException;
 import lombok.AllArgsConstructor;

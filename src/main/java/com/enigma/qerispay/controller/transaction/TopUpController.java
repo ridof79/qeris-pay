@@ -1,8 +1,8 @@
 package com.enigma.qerispay.controller.transaction;
 
-import com.enigma.qerispay.dto.TopUpDTO;
-import com.enigma.qerispay.dto.TopUpMerchantDTO;
-import com.enigma.qerispay.service.TopUpService;
+import com.enigma.qerispay.dto.transaction.TopUpDTO;
+import com.enigma.qerispay.dto.transaction.TopUpMerchantDTO;
+import com.enigma.qerispay.service.transaction.TopUpService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.constant.InsertDataConstant;
 import com.enigma.qerispay.utils.customResponse.Response;
@@ -26,7 +26,7 @@ public class TopUpController {
     @PostMapping("/customer")
     public ResponseEntity<Response<TopUpDTO>> saveMerchant(@RequestBody TopUpDTO topUpDTO) {
         Response<TopUpDTO> response = new Response<>();
-        response.setMessage(InsertDataConstant.INSERT_BALANCE_SUCCES);
+        response.setMessage(InsertDataConstant.INSERT_BALANCE_SUCCESS);
         response.setData(topUpService.customerTopUp(topUpDTO));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -36,7 +36,7 @@ public class TopUpController {
     @PostMapping("/merchant")
     public ResponseEntity<Response<TopUpMerchantDTO>> saveMerchant(@RequestBody TopUpMerchantDTO topUpMerchantDTO) {
         Response<TopUpMerchantDTO> response = new Response<>();
-        response.setMessage(InsertDataConstant.INSERT_BALANCE_SUCCES);
+        response.setMessage(InsertDataConstant.INSERT_BALANCE_SUCCESS);
         response.setData(topUpService.merchantTopUp(topUpMerchantDTO));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)

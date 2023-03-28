@@ -1,8 +1,9 @@
 package com.enigma.qerispay.controller.entity;
 
 import com.enigma.qerispay.entiy.storage.FileStorage;
-import com.enigma.qerispay.service.FIleStorageService;
+import com.enigma.qerispay.service.entity.FIleStorageService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
+import com.enigma.qerispay.utils.constant.ControllerConstant;
 import com.enigma.qerispay.utils.customResponse.ResponseFile;
 import com.enigma.qerispay.utils.customResponse.ResponseMessage;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -24,24 +25,28 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(ApiUrlConstant.FILE_PATH)
 @AllArgsConstructor
-@SecurityRequirement(name = "Authorization")
 public class FileController {
 
     private final FIleStorageService storageService;
 
+    @SecurityRequirement(name = "Authorization")
     @PostMapping("/upload")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
-        String message = "";
         try {
             storageService.store(file);
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseMessage(String.format(
+                            ControllerConstant.UPLOADED_THE_FILE_SUCCESSFULLY, file.getOriginalFilename()))
+            );
         } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseMessage(String.format(
+                            ControllerConstant.COULD_NOT_UPLOAD_THE_FILE, file.getOriginalFilename()))
+                    );
         }
     }
 
+    @SecurityRequirement(name = "Authorization")
     @GetMapping("/files")
     public ResponseEntity<List<ResponseFile>> getListFiles() {
         List<ResponseFile> files = storageService.getAllFiles().map(dbFile -> {
@@ -61,7 +66,8 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
-    @GetMapping("/{id}")
+
+    @GetMapping("/download/{id}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String id, HttpServletResponse response) throws IOException {
         FileStorage fileStorage = storageService.getFile(id);
 

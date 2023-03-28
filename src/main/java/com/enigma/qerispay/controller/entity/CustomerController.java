@@ -3,8 +3,9 @@ package com.enigma.qerispay.controller.entity;
 import com.enigma.qerispay.auth.CustomUserDetails;
 import com.enigma.qerispay.dto.entity.CustomerDTO;
 import com.enigma.qerispay.entiy.Customer;
-import com.enigma.qerispay.service.CustomerService;
+import com.enigma.qerispay.service.entity.CustomerService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
+import com.enigma.qerispay.utils.constant.ControllerConstant;
 import com.enigma.qerispay.utils.constant.InsertDataConstant;
 import com.enigma.qerispay.utils.customResponse.Response;
 import com.enigma.qerispay.utils.exception.UnauthorizedException;
@@ -32,12 +33,12 @@ public class CustomerController {
     public ResponseEntity<?> updateCustomer(@RequestBody Customer customer, Authentication authentication) {
         if (customer.getId().equals(((CustomUserDetails) authentication.getPrincipal()).getId())) {
             CustomerDTO updateCustomer = customerService.updateCustomer(customer);
-            Response<?> response = new Response<>("Successfully update customer data", updateCustomer);
+            Response<?> response = new Response<>(ControllerConstant.SUCCESSFULLY_UPDATE_CUSTOMER_DATA, updateCustomer);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(response);
         } else {
-            return new ResponseEntity<>("Unauthorized.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ControllerConstant.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -51,7 +52,7 @@ public class CustomerController {
         if (id.equals(((CustomUserDetails) authentication.getPrincipal()).getId())) {
             return customerService.getCustomerById(id);
         } else {
-            throw new AccessDeniedException("You do not have permission to access this resource");
+            throw new UnauthorizedException(ControllerConstant.UNAUTHORIZED);
         }
     }
 
@@ -63,7 +64,7 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<Response<Customer>> saveCustomer(@RequestBody Customer customer) {
         Response<Customer> response = new Response<>();
-        response.setMessage(InsertDataConstant.INSERT_CUSTOMER_SUCCES);
+        response.setMessage(InsertDataConstant.INSERT_CUSTOMER_SUCCESS);
         response.setData(customerService.saveCustomer(customer));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)

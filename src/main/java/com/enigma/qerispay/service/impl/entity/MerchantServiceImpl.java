@@ -4,9 +4,9 @@ import com.enigma.qerispay.dto.entity.MerchantDTO;
 import com.enigma.qerispay.entiy.Merchant;
 import com.enigma.qerispay.entiy.Wallet;
 import com.enigma.qerispay.repository.MerchantRepository;
-import com.enigma.qerispay.service.MerchantService;
-import com.enigma.qerispay.service.RoleService;
-import com.enigma.qerispay.service.WalletService;
+import com.enigma.qerispay.service.entity.MerchantService;
+import com.enigma.qerispay.service.security.RoleService;
+import com.enigma.qerispay.service.entity.WalletService;
 import com.enigma.qerispay.utils.constant.NotFoundConstant;
 import com.enigma.qerispay.utils.exception.DataNotFoundException;
 import lombok.AllArgsConstructor;
@@ -73,9 +73,10 @@ public class MerchantServiceImpl implements MerchantService {
     }
 
     @Override
-    public Merchant getMerchantByNIB(String nib) {
+    public MerchantDTO getMerchantByNIB(String nib) {
         if (merchantRepository.findMerchantByMerchantNIB(nib)!=null) {
-            return merchantRepository.findMerchantByMerchantNIB(nib);
+            Merchant getMerchant = merchantRepository.findMerchantByMerchantNIB(nib);
+            return new MerchantDTO(getMerchant);
         } else {
             throw new DataNotFoundException(String.format(NotFoundConstant.MERCHANT_NIB_NOT_FOUND, nib));
         }

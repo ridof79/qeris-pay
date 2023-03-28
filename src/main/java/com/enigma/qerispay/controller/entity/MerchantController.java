@@ -3,8 +3,9 @@ package com.enigma.qerispay.controller.entity;
 import com.enigma.qerispay.auth.CustomUserDetails;
 import com.enigma.qerispay.dto.entity.MerchantDTO;
 import com.enigma.qerispay.entiy.Merchant;
-import com.enigma.qerispay.service.MerchantService;
+import com.enigma.qerispay.service.entity.MerchantService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
+import com.enigma.qerispay.utils.constant.ControllerConstant;
 import com.enigma.qerispay.utils.constant.InsertDataConstant;
 import com.enigma.qerispay.utils.customResponse.Response;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,12 +30,12 @@ public class MerchantController {
     public ResponseEntity<?> updateMerchant(@RequestBody Merchant merchant, Authentication authentication) {
         if (merchant.getId().equals(((CustomUserDetails) authentication.getPrincipal()).getId())) {
             MerchantDTO updatedMerchant = merchantService.updateMerchant(merchant);
-            Response<?> response = new Response<>("Successfully update merchant data", updatedMerchant);
+            Response<?> response = new Response<>(ControllerConstant.SUCCESSFULLY_UPDATE_MERCHANT_DATA, updatedMerchant);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(response);
         } else {
-            return new ResponseEntity<>("Unauthorized.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ControllerConstant.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -56,7 +57,7 @@ public class MerchantController {
     @PostMapping
     public ResponseEntity<Response<Merchant>> saveMerchant(@RequestBody Merchant merchant) {
         Response<Merchant> response = new Response<>();
-        response.setMessage(InsertDataConstant.INSERT_MERCHANT_SUCCES);
+        response.setMessage(InsertDataConstant.INSERT_MERCHANT_SUCCESS);
         response.setData(merchantService.saveMerchant(merchant));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
