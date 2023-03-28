@@ -1,12 +1,11 @@
 package com.enigma.qerispay.controller;
 
 import com.enigma.qerispay.dto.SendBalanceDTO;
-import com.enigma.qerispay.dto.TopUpDTO;
 import com.enigma.qerispay.service.CustomerSendBalanceService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
-import com.enigma.qerispay.utils.constant.InsertDataConstant;
 import com.enigma.qerispay.utils.constant.TransactionConstant;
 import com.enigma.qerispay.utils.customResponse.Response;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(ApiUrlConstant.SEND_BALANCE_PATH)
 @AllArgsConstructor
+@SecurityRequirement(name = "Authorization")
 public class SendBalanceController {
     CustomerSendBalanceService sendBalanceService;
 

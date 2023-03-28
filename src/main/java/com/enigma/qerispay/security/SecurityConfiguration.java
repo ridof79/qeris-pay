@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .antMatchers("/users/**").access("@userSecurity.hasUserId(authentication,#userId) or hasRole('ADMIN')")
                 .anyRequest().authenticated().and()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

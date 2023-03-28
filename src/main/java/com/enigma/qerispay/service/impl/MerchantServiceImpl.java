@@ -1,6 +1,6 @@
 package com.enigma.qerispay.service.impl;
 
-import com.enigma.qerispay.dto.ERole;
+import com.enigma.qerispay.dto.entity.MerchantDTO;
 import com.enigma.qerispay.entiy.Merchant;
 import com.enigma.qerispay.entiy.Wallet;
 import com.enigma.qerispay.repository.MerchantRepository;
@@ -35,9 +35,11 @@ public class MerchantServiceImpl implements MerchantService {
     }
 
     @Override
-    public Merchant updateMerchant(Merchant merchant) {
+    @Transactional
+    public MerchantDTO updateMerchant(Merchant merchant) {
         if (merchantRepository.findById(merchant.getId()).isPresent()) {
-            return merchantRepository.save(merchant);
+            Merchant merchantSaved = saveMerchant(merchant);
+            return new MerchantDTO(merchantSaved);
         } else {
             throw new DataNotFoundException(String.format(NotFoundConstant.MERCHANT_NOT_FOUND, merchant.getId()));
         }

@@ -14,7 +14,9 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class UserDetailServiceImpl implements UserDetailsService {
+
     UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> appUser = userRepository.findByUsername(username);

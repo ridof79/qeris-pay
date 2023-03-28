@@ -1,8 +1,8 @@
 package com.enigma.qerispay.auth;
 
 import com.enigma.qerispay.entiy.User;
-import com.enigma.qerispay.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
+@Getter
 public class CustomUserDetails implements UserDetails {
 
     private User user;

@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Entity
 @DiscriminatorValue("mst_merchant")
@@ -29,7 +27,7 @@ public class Merchant extends User {
     @Column(unique = true)
     private String merchantPhone;
 
-    @Column(unique = true)
+    @Column(name = "merchant_NIB", unique = true)
     private String merchantNIB;
 
     @OneToOne

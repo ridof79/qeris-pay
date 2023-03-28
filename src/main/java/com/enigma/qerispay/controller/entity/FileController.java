@@ -5,6 +5,7 @@ import com.enigma.qerispay.service.FIleStorageService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.customResponse.ResponseFile;
 import com.enigma.qerispay.utils.customResponse.ResponseMessage;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(ApiUrlConstant.FILE_PATH)
 @AllArgsConstructor
+@SecurityRequirement(name = "Authorization")
 public class FileController {
 
     private final FIleStorageService storageService;

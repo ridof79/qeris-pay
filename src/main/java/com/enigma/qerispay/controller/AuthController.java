@@ -6,7 +6,9 @@ import com.enigma.qerispay.auth.UserDTO;
 import com.enigma.qerispay.dto.VerificationDTO;
 import com.enigma.qerispay.service.AuthService;
 import com.enigma.qerispay.service.UserService;
+import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.customResponse.Response;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,14 +16,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(ApiUrlConstant.AUTH_PATH)
 @AllArgsConstructor
+@SecurityRequirement(name = "Authorization")
 public class AuthController {
+
     private AuthService authService;
     private UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AuthRequestDTO authRequest){
+    @PostMapping("/register/customer")
+    public ResponseEntity<?> registerCustomer(@RequestBody AuthRequestDTO authRequest){
         UserDTO register = authService.registerCustomer(authRequest);
         Response<?> response = new Response<>("Successfuly create new Customer", register);
 
@@ -29,10 +33,11 @@ public class AuthController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
+
     @PostMapping("/register/merchant")
     public ResponseEntity<?> registerMerchant(@RequestBody AuthRequestDTO authRequest){
         UserDTO register = authService.registerMerchant(authRequest);
-        Response<?> response = new Response<>("Successfuly create new Merchant", register);
+        Response<?> response = new Response<>("Successfully create new Merchant", register);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -47,11 +52,11 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public String verifyUser(@RequestBody VerificationDTO verificationDTO) {
+    public ResponseEntity<?> verifyUser(@RequestBody VerificationDTO verificationDTO) {
         if (userService.verify(verificationDTO)) {
-            return "verify_success";
+            return new ResponseEntity<>("Verification success.", HttpStatus.BAD_REQUEST);
         } else {
-            return "verify_fail";
+            return new ResponseEntity<>("Verification failed.", HttpStatus.BAD_REQUEST);
         }
     }
 }

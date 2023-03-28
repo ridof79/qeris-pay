@@ -1,6 +1,6 @@
 package com.enigma.qerispay.service.impl;
 
-import com.enigma.qerispay.dto.ERole;
+import com.enigma.qerispay.dto.entity.CustomerDTO;
 import com.enigma.qerispay.entiy.Customer;
 import com.enigma.qerispay.entiy.Wallet;
 import com.enigma.qerispay.repository.CustomerRepository;
@@ -26,18 +26,18 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public Customer saveCustomer(Customer customer) {
-
         Customer savedCustomer = customerRepository.save(customer);
         Wallet addWallet = walletService.saveWallet(savedCustomer.getWallet());
         savedCustomer.setWallet(addWallet);
-
         return customerRepository.save(customer);
     }
 
     @Override
-    public Customer updateCustomer(Customer customer) {
+    @Transactional
+    public CustomerDTO updateCustomer(Customer customer) {
         if (customerRepository.findById(customer.getId()).isPresent()) {
-            return customerRepository.save(customer);
+            Customer customerSaved = saveCustomer(customer);
+            return new CustomerDTO(customerSaved);
         } else {
             throw new DataNotFoundException(String.format(NotFoundConstant.CUSTOMER_NOT_FOUND, customer.getId()));
         }

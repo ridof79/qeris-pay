@@ -44,6 +44,10 @@ public class AuthServiceImpl implements AuthService {
         Role role = roleService.getOrSave(ERole.valueOf(user.getRole()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User userSaved = new Customer();
+        return setRegister(user, role, userSaved);
+    }
+
+    private UserDTO setRegister(AuthRequestDTO user, Role role, User userSaved) {
         userSaved.setUsername(user.getUsername());
         userSaved.setPassword(user.getPassword());
         userSaved.setRoles(new ArrayList<>(Collections.singleton(role)));
@@ -58,13 +62,7 @@ public class AuthServiceImpl implements AuthService {
         Role role = roleService.getOrSave(ERole.valueOf(user.getRole()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User userSaved = new Merchant();
-        userSaved.setUsername(user.getUsername());
-        userSaved.setPassword(user.getPassword());
-        userSaved.setRoles(new ArrayList<>(Collections.singleton(role)));
-        generateOTP(user.getPhoneNumber());
-        User id = userRepository.save(userSaved);
-        userSaved.setId(id.getId());
-        return new UserDTO(userSaved);
+        return setRegister(user, role, userSaved);
     }
 
     @Override
@@ -87,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
         Verification verification = Verification.creator(
                         "VA8bc646fc3177cf74f222f89c6bc4d61a",
                         phoneNumber,
-                        "whatsapp") // this is your channel type
+                        "whatsapp")
                 .create();
         log.info("OTP has been successfully generated, and awaits your verification {}", LocalDateTime.now());
     }

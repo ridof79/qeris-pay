@@ -9,18 +9,17 @@ import com.enigma.qerispay.service.RequestPaymentService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.customResponse.ResponseFile;
 import com.google.zxing.WriterException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-
-import static com.enigma.qerispay.qr.QRCodeGenerator.decodeQRCode;
 
 @RestController
 @RequestMapping(ApiUrlConstant.PAYMENT_QR_PATH)
 @AllArgsConstructor
+@SecurityRequirement(name = "Authorization")
 public class RequestPaymentQRController {
 
     private final FIleStorageService storageService;

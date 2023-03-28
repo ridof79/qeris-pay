@@ -1,14 +1,13 @@
 package com.enigma.qerispay.controller.entity;
 
 import com.enigma.qerispay.dto.RewardDTO;
-import com.enigma.qerispay.entiy.Customer;
-import com.enigma.qerispay.entiy.Merchant;
 import com.enigma.qerispay.entiy.Reward;
 import com.enigma.qerispay.service.RewardService;
 import com.enigma.qerispay.service.TransactionRewardService;
 import com.enigma.qerispay.utils.constant.ApiUrlConstant;
 import com.enigma.qerispay.utils.constant.InsertDataConstant;
 import com.enigma.qerispay.utils.customResponse.Response;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping(ApiUrlConstant.REWARD_PATH)
 @AllArgsConstructor
+@SecurityRequirement(name = "Authorization")
 public class RewardController {
 
     RewardService rewardService;
