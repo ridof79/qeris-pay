@@ -25,9 +25,6 @@ public class Merchant extends User {
     @Column
     private String merchantAddress;
 
-    @Column(unique = true)
-    private String merchantPhone;
-
     @Column(name = "merchant_NIB", unique = true)
     private String merchantNIB;
 

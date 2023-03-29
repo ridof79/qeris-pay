@@ -26,9 +26,6 @@ public class Customer extends User{
     @Column
     private String customerAddress;
 
-    @Column(unique = true)
-    private String customerPhone;
-
     @Column
     private Date birthDate;
 

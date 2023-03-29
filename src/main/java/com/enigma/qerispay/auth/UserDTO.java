@@ -1,6 +1,5 @@
 package com.enigma.qerispay.auth;
 
-import com.enigma.qerispay.entiy.Role;
 import com.enigma.qerispay.entiy.User;
 import lombok.Getter;
 import lombok.Setter;

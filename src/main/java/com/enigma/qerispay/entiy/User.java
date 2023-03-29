@@ -28,6 +28,9 @@ public abstract class User {
 
     private boolean enabled;
 
+    @Column(unique = true)
+    private String phoneNumber;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "trx_user_role",
             joinColumns = @JoinColumn(name = "user_id"),

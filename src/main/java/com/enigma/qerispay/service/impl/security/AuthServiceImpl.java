@@ -51,6 +51,7 @@ public class AuthServiceImpl implements AuthService {
         userSaved.setUsername(user.getUsername());
         userSaved.setPassword(user.getPassword());
         userSaved.setRoles(new ArrayList<>(Collections.singleton(role)));
+        userSaved.setPhoneNumber(user.getPhoneNumber());
         generateOTP(user.getPhoneNumber());
         User id = userRepository.save(userSaved);
         userSaved.setId(id.getId());
@@ -82,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void generateOTP(String phoneNumber){
         Twilio.init(System.getenv("TWILIO_ACCOUNT_SID"), System.getenv("TWILIO_AUTH_TOKEN"));
-        Verification verification = Verification.creator(
+        Verification.creator(
                         "VA8bc646fc3177cf74f222f89c6bc4d61a",
                         phoneNumber,
                         "whatsapp")
