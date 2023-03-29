@@ -37,7 +37,7 @@ public class CustomerController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(response);
         } else {
-            return new ResponseEntity<>(ControllerConstant.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException(ControllerConstant.UNAUTHORIZED);
         }
     }
 

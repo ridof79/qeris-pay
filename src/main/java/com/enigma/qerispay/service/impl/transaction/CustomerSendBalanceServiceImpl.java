@@ -27,7 +27,7 @@ public class CustomerSendBalanceServiceImpl implements CustomerSendBalanceServic
 
     @Override
     public SendBalanceDTO sendBalance(SendBalanceDTO sendBalanceDTO) {
-        Customer sender = customerService.getCustomerById(sendBalanceDTO.getSender().getId());
+        Customer sender = customerService.getCustomerById(sendBalanceDTO.getSenderId());
         CustomerDTO receiverDTO = customerService.getCustomerByPhone(sendBalanceDTO.getPhoneNumberReceiver());
         Customer receiver = customerService.getCustomerById(receiverDTO.getId());
 

@@ -1,6 +1,5 @@
 package com.enigma.qerispay.controller.entity;
 
-import com.enigma.qerispay.dto.transaction.RewardDTO;
 import com.enigma.qerispay.entiy.Reward;
 import com.enigma.qerispay.service.entity.RewardService;
 import com.enigma.qerispay.service.transaction.TransactionRewardService;
@@ -55,8 +54,4 @@ public class RewardController {
         return rewardService.getRewardById(id);
     }
 
-    @PostMapping("/claim")
-    public void claimReward(@RequestBody RewardDTO rewardDTO) {
-        transactionRewardService.claimReward(rewardDTO);
-    }
 }

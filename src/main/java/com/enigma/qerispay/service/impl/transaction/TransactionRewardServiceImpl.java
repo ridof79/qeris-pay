@@ -28,9 +28,9 @@ public class TransactionRewardServiceImpl implements TransactionRewardService {
     RewardService rewardService;
 
     @Override
-    public void claimReward(RewardDTO rewardDTO) {
+    public RewardDTO claimReward(RewardDTO rewardDTO) {
         Transaction clamReward = new Transaction();
-        Customer customer = customerService.getCustomerById(rewardDTO.getCustomer().getId());
+        Customer customer = customerService.getCustomerById(rewardDTO.getCustomerId());
         Reward reward = rewardService.getRewardById(rewardDTO.getReward().getId());
         Wallet wallet = walletService.getWalletById(customer.getWallet().getId());
 
@@ -44,6 +44,8 @@ public class TransactionRewardServiceImpl implements TransactionRewardService {
 
             wallet.setQerisCoin(wallet.getQerisCoin() - reward.getRewardPrice());
             walletService.updateWallet(wallet);
+
+            return rewardDTO;
         } else {
             throw new InsufficientBalanceException(TransactionConstant.INSUFFICIENT_QERISCOIN_BALANCE);
         }

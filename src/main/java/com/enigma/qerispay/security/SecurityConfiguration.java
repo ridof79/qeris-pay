@@ -43,6 +43,8 @@ public class SecurityConfiguration {
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/users/**").access("(hasRole('ROLE_ADMIN') or @userSecurity.hasUserId(authentication, #userId))")
                 .antMatchers("/transaction/payment-qr/**").access("(hasAnyRole('ROLE_ADMIN','ROLE_MERCHANT','ROLE_CUSTOMER') or @userSecurity.hasUserId(authentication, #userId))")
+                .antMatchers("/transaction/customer/**").access("(hasAnyRole('ROLE_ADMIN','ROLE_CUSTOMER') or @userSecurity.hasUserId(authentication, #userId))")
+                .antMatchers("/transaction/auth/**").access("(hasRole('ROLE_ADMIN'))")
                 .anyRequest().authenticated().and()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

@@ -1,6 +1,5 @@
 package com.enigma.qerispay.dto.transaction;
 
-import com.enigma.qerispay.entiy.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SendBalanceDTO {
-    private Customer sender;
+    private String senderId;
     private Integer amount;
     private String phoneNumberReceiver;
 }
