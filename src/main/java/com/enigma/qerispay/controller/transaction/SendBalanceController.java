@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @SecurityRequirement(name = "Authorization")
 public class SendBalanceController {
+
     CustomerSendBalanceService sendBalanceService;
 
     @PostMapping

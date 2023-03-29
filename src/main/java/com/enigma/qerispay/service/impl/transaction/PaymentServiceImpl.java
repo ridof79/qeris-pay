@@ -2,8 +2,8 @@ package com.enigma.qerispay.service.impl.transaction;
 
 import com.enigma.qerispay.dto.ETransactionType;
 import com.enigma.qerispay.dto.transaction.PaymentDTO;
-import com.enigma.qerispay.dto.transaction.RequestPaymentCustomerDTO;
-import com.enigma.qerispay.dto.transaction.RequestPaymentMerchantDTO;
+import com.enigma.qerispay.dto.transaction.PaymentCustomerDTO;
+import com.enigma.qerispay.dto.transaction.PaymentMerchantDTO;
 import com.enigma.qerispay.entiy.Customer;
 import com.enigma.qerispay.entiy.Merchant;
 import com.enigma.qerispay.entiy.Wallet;
@@ -11,11 +11,12 @@ import com.enigma.qerispay.entiy.storage.FileStorage;
 import com.enigma.qerispay.entiy.transaction.Transaction;
 import com.enigma.qerispay.entiy.transaction.TransactionCashback;
 import com.enigma.qerispay.qr.QRCodeGenerator;
+
 import com.enigma.qerispay.service.entity.CustomerService;
 import com.enigma.qerispay.service.entity.FIleStorageService;
 import com.enigma.qerispay.service.entity.MerchantService;
 import com.enigma.qerispay.service.entity.WalletService;
-import com.enigma.qerispay.service.transaction.RequestPaymentService;
+import com.enigma.qerispay.service.transaction.PaymentService;
 import com.enigma.qerispay.service.transaction.TransactionCashbackService;
 import com.enigma.qerispay.service.transaction.TransactionService;
 import com.enigma.qerispay.service.transaction.TransactionTypeService;
@@ -33,10 +34,12 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.enigma.qerispay.qr.QRCodeGenerator.decodeQRCode;
+import static com.enigma.qerispay.qr.StringDecoder.*;
+
 
 @Service
 @AllArgsConstructor
-public class RequestPaymentServiceImpl implements RequestPaymentService {
+public class PaymentServiceImpl implements PaymentService {
 
     MerchantService merchantService;
     WalletService walletService;
@@ -47,30 +50,30 @@ public class RequestPaymentServiceImpl implements RequestPaymentService {
     TransactionCashbackService cashbackService;
 
     @Override
-    public ResponseFile requestPayment(RequestPaymentMerchantDTO requestPaymentMerchantDTO) throws IOException, WriterException {
+    public ResponseFile requestPayment(PaymentMerchantDTO paymentMerchantDTO) throws IOException, WriterException {
 
-        Wallet merchantWallet = walletService.getWalletById(requestPaymentMerchantDTO.getMerchant().getId());
-        if (!(merchantWallet.getQerisCoin() < getCashback(requestPaymentMerchantDTO))) {
+        Wallet merchantWallet = merchantService.getMerchantById(paymentMerchantDTO.getMerchant().getId()).getWallet();
+        if (!(merchantWallet.getQerisCoin() < getCashback(paymentMerchantDTO))) {
             String request = String.format(
                     RequestQRFormat.REQUEST_PAYMENT_QR,
-                    requestPaymentMerchantDTO.getMerchant().getId(),
-                    requestPaymentMerchantDTO.getAmount().toString(),
-                    getCashback(requestPaymentMerchantDTO)
+                    paymentMerchantDTO.getMerchant().getId(),
+                    paymentMerchantDTO.getAmount().toString(),
+                    getCashback(paymentMerchantDTO)
             );
 
             String fileName = String.format(RequestQRFormat.QR_CODE_FILENAME,
-                    requestPaymentMerchantDTO.getMerchant().getId(),
-                    requestPaymentMerchantDTO.getAmount(),
-                    requestPaymentMerchantDTO.getCashback()
+                    paymentMerchantDTO.getMerchant().getId(),
+                    paymentMerchantDTO.getAmount(),
+                    getCashback(paymentMerchantDTO)
             );
 
-            byte[] pngData = QRCodeGenerator.getQRCodeImage(request, 250, 250);
+            byte[] pngData = QRCodeGenerator.getQRCodeImage(encryptAES(request), 250, 250);
             FileStorage qr = new FileStorage(fileName, "image/png", pngData);
             fIleStorageService.addFile(qr);
 
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("/files/")
+                    .path("/files/download/")
                     .path(qr.getId())
                     .toUriString();
 
@@ -86,10 +89,11 @@ public class RequestPaymentServiceImpl implements RequestPaymentService {
 
 
     @Override
-    public RequestPaymentMerchantDTO decodeQRCodeFromMerchant(File file) {
+    public PaymentMerchantDTO decodeQRCodeFromMerchant(File file) {
         try {
-            String[] resultDecode = decodeQRCode(file).split(",");
-            return new RequestPaymentMerchantDTO(
+
+            String[] resultDecode = decryptAES(decodeQRCode(file)).split(",");
+            return new PaymentMerchantDTO(
                     merchantService.getMerchantById(resultDecode[0]),
                     Integer.parseInt(resultDecode[1]),
                     Integer.parseInt(resultDecode[2])
@@ -103,36 +107,36 @@ public class RequestPaymentServiceImpl implements RequestPaymentService {
 
     @Override
     @Transactional
-    public PaymentDTO makePayment(RequestPaymentCustomerDTO paymentCustomerDTO) {
-        RequestPaymentMerchantDTO requestPaymentMerchantDTO = decodeQRCodeFromMerchant(paymentCustomerDTO.getFile());
+    public PaymentDTO makePayment(PaymentCustomerDTO paymentCustomerDTO) throws InsufficientBalanceException{
+        PaymentMerchantDTO paymentMerchantDTO = decodeQRCodeFromMerchant(paymentCustomerDTO.getFile());
 
-        Merchant merchant = merchantService.getMerchantById(requestPaymentMerchantDTO.getMerchant().getId());
+        Merchant merchant = merchantService.getMerchantById(paymentMerchantDTO.getMerchant().getId());
         Customer customer = customerService.getCustomerById(paymentCustomerDTO.getCustomer().getId());
         Wallet walletCustomer = walletService.getWalletById(customer.getWallet().getId());
         Wallet walletMerchant = walletService.getWalletById(merchant.getWallet().getId());
 
-        if (!(walletCustomer.getBalance()<requestPaymentMerchantDTO.getAmount())) {
+        if (!(walletCustomer.getBalance()< paymentMerchantDTO.getAmount())) {
             Transaction paymentTransaction = new Transaction();
             paymentTransaction.setType(transactionTypeService.getOrSave(ETransactionType.PAY));
-            paymentTransaction.setAmount(requestPaymentMerchantDTO.getAmount());
+            paymentTransaction.setAmount(paymentMerchantDTO.getAmount());
             paymentTransaction.setCustomer(customer);
             paymentTransaction.setMerchant(merchant);
 
-            if (requestPaymentMerchantDTO.getCashback() == 0) {
+            if (paymentMerchantDTO.getCashback() == null || paymentMerchantDTO.getCashback() == 0) {
                 transactionService.addTransaction(paymentTransaction);
             } else {
                 TransactionCashback cashback = new TransactionCashback();
                 cashback.setCustomer(customer);
                 cashback.setMerchant(merchant);
-                cashback.setQerisCointAmount(requestPaymentMerchantDTO.getCashback());
+                cashback.setQerisCointAmount(paymentMerchantDTO.getCashback());
                 cashbackService.addTransactionCashback(cashback);
                 paymentTransaction.setCashback(cashback);
-                walletCustomer.setQerisCoin(walletCustomer.getQerisCoin() + requestPaymentMerchantDTO.getCashback());
-                walletMerchant.setQerisCoin(walletMerchant.getQerisCoin() - requestPaymentMerchantDTO.getCashback());
+                walletCustomer.setQerisCoin(walletCustomer.getQerisCoin() + paymentMerchantDTO.getCashback());
+                walletMerchant.setQerisCoin(walletMerchant.getQerisCoin() - paymentMerchantDTO.getCashback());
             }
 
-            walletCustomer.setBalance(walletCustomer.getBalance() - requestPaymentMerchantDTO.getAmount());
-            walletMerchant.setBalance(walletMerchant.getBalance() + requestPaymentMerchantDTO.getAmount());
+            walletCustomer.setBalance(walletCustomer.getBalance() - paymentMerchantDTO.getAmount());
+            walletMerchant.setBalance(walletMerchant.getBalance() + paymentMerchantDTO.getAmount());
 
             walletService.updateWallet(walletCustomer);
             walletService.updateWallet(walletMerchant);
@@ -143,11 +147,11 @@ public class RequestPaymentServiceImpl implements RequestPaymentService {
         }
     }
 
-    private Integer getCashback(RequestPaymentMerchantDTO requestPaymentMerchantDTO) {
+    private Integer getCashback(PaymentMerchantDTO paymentMerchantDTO) {
         Double cashback = null;
-        if (requestPaymentMerchantDTO.getCashback() != null) {
-            cashback = requestPaymentMerchantDTO.getCashback().doubleValue();
-            cashback = (cashback / 100) * requestPaymentMerchantDTO.getCashback();
+        if (paymentMerchantDTO.getCashback() != null) {
+            cashback = paymentMerchantDTO.getCashback().doubleValue();
+            cashback = (cashback / 100) * paymentMerchantDTO.getAmount();
         } else {
             cashback = 0.0;
         }

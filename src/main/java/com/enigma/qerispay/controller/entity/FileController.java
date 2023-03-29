@@ -52,7 +52,7 @@ public class FileController {
         List<ResponseFile> files = storageService.getAllFiles().map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("/files/")
+                    .path("/files/download/")
                     .path(dbFile.getId())
                     .toUriString();
 

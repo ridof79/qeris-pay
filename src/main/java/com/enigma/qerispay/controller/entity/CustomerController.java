@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -48,7 +47,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public Customer getCustomerById(@PathVariable String id, Authentication authentication) throws AccessDeniedException {
+    public Customer getCustomerById(@PathVariable String id, Authentication authentication) {
         if (id.equals(((CustomUserDetails) authentication.getPrincipal()).getId())) {
             return customerService.getCustomerById(id);
         } else {

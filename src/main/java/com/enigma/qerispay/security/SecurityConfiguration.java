@@ -42,6 +42,7 @@ public class SecurityConfiguration {
                 .antMatchers("/files/download/**").permitAll()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/users/**").access("(hasRole('ROLE_ADMIN') or @userSecurity.hasUserId(authentication, #userId))")
+                .antMatchers("/transaction/payment-qr/**").access("(hasAnyRole('ROLE_ADMIN','ROLE_MERCHANT','ROLE_CUSTOMER') or @userSecurity.hasUserId(authentication, #userId))")
                 .anyRequest().authenticated().and()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

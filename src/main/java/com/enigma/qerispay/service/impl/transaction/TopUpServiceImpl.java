@@ -17,6 +17,7 @@ import com.enigma.qerispay.utils.constant.NotFoundConstant;
 import com.enigma.qerispay.utils.exception.DataNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -29,13 +30,14 @@ public class TopUpServiceImpl implements TopUpService {
     MerchantService merchantService;
 
     @Override
+    @Transactional
     public TopUpDTO customerTopUp(TopUpDTO topUpDTO) {
-        if (customerService.getCustomerById(topUpDTO.getCustomer().getId()) != null) {
-            Customer customer = customerService.getCustomerById(topUpDTO.getCustomer().getId());
+        if (customerService.getCustomerById(topUpDTO.getCustomerId()) != null) {
+            Customer customer = customerService.getCustomerById(topUpDTO.getCustomerId());
 
             Transaction topUpTransaction = new Transaction();
             topUpTransaction.setAmount(topUpDTO.getAmount());
-            topUpTransaction.setCustomer(topUpDTO.getCustomer());
+            topUpTransaction.setCustomer(customer);
             topUpTransaction.setType(transactionTypeService.getOrSave(ETransactionType.TOP_UP));
             transactionService.addTransaction(topUpTransaction);
 
@@ -45,27 +47,28 @@ public class TopUpServiceImpl implements TopUpService {
 
             return topUpDTO;
         } else {
-            throw new DataNotFoundException(String.format(NotFoundConstant.CUSTOMER_NOT_FOUND, topUpDTO.getCustomer().getId()));
+            throw new DataNotFoundException(String.format(NotFoundConstant.CUSTOMER_NOT_FOUND, topUpDTO.getCustomerId()));
         }
     }
 
     @Override
+    @Transactional
     public TopUpMerchantDTO merchantTopUp(TopUpMerchantDTO topUpMerchantDTO) {
-        if (merchantService.getMerchantById(topUpMerchantDTO.getMerchant().getId()) != null) {
-            Merchant merchant = merchantService.getMerchantById(topUpMerchantDTO.getMerchant().getId());
+        if (merchantService.getMerchantById(topUpMerchantDTO.getMerchantId()) != null) {
+            Merchant merchant = merchantService.getMerchantById(topUpMerchantDTO.getMerchantId());
 
             Transaction topUpTransaction = new Transaction();
             topUpTransaction.setAmount(topUpMerchantDTO.getAmount());
-            topUpTransaction.setMerchant(topUpMerchantDTO.getMerchant());
+            topUpTransaction.setMerchant(merchant);
             topUpTransaction.setType(transactionTypeService.getOrSave(ETransactionType.TOP_UP));
             transactionService.addTransaction(topUpTransaction);
 
             Wallet wallet = walletService.getWalletById(merchant.getWallet().getId());
-            wallet.setBalance(wallet.getBalance() + topUpMerchantDTO.getAmount());
+            wallet.setQerisCoin(wallet.getQerisCoin() + topUpMerchantDTO.getAmount());
             walletService.updateWallet(wallet);
             return topUpMerchantDTO;
         } else {
-            throw new DataNotFoundException(String.format(NotFoundConstant.MERCHANT_NOT_FOUND, topUpMerchantDTO.getMerchant().getId()));
+            throw new DataNotFoundException(String.format(NotFoundConstant.MERCHANT_NOT_FOUND, topUpMerchantDTO.getMerchantId()));
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.enigma.qerispay.dto.transaction;
 
-import com.enigma.qerispay.entiy.Merchant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TopUpMerchantDTO {
-    private Merchant merchant;
+    private String merchantId;
     private Integer amount;
 }

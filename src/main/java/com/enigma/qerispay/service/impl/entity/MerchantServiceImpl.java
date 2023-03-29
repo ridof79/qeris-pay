@@ -2,11 +2,9 @@ package com.enigma.qerispay.service.impl.entity;
 
 import com.enigma.qerispay.dto.entity.MerchantDTO;
 import com.enigma.qerispay.entiy.Merchant;
-import com.enigma.qerispay.entiy.Wallet;
 import com.enigma.qerispay.repository.MerchantRepository;
 import com.enigma.qerispay.service.entity.MerchantService;
 import com.enigma.qerispay.service.security.RoleService;
-import com.enigma.qerispay.service.entity.WalletService;
 import com.enigma.qerispay.utils.constant.NotFoundConstant;
 import com.enigma.qerispay.utils.exception.DataNotFoundException;
 import lombok.AllArgsConstructor;
@@ -20,17 +18,11 @@ import java.util.List;
 public class MerchantServiceImpl implements MerchantService {
 
     MerchantRepository merchantRepository;
-    WalletService walletService;
     RoleService roleService;
 
     @Override
     @Transactional
     public Merchant saveMerchant(Merchant merchant) {
-
-        Merchant savedMerchant = merchantRepository.save(merchant);
-        Wallet addWallet = walletService.saveWallet(savedMerchant.getWallet());
-        savedMerchant.setWallet(addWallet);
-
         return merchantRepository.save(merchant);
     }
 
@@ -42,6 +34,7 @@ public class MerchantServiceImpl implements MerchantService {
             merchant.setPassword(merchantOld.getPassword());
             merchant.setUsername(merchantOld.getUsername());
             merchant.setEnabled(merchantOld.isEnabled());
+            merchant.setRoles(merchantOld.getRoles());
             Merchant merchantSaved = saveMerchant(merchant);
             return new MerchantDTO(merchantSaved);
         } else {

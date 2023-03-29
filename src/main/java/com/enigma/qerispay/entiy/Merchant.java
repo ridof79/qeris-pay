@@ -8,7 +8,8 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@DiscriminatorValue("mst_merchant")
+@Table(name = "mst_merchant")
+@DiscriminatorValue("merchant")
 @Getter
 @Setter
 @NoArgsConstructor

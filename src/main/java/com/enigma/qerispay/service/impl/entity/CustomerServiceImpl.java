@@ -2,11 +2,9 @@ package com.enigma.qerispay.service.impl.entity;
 
 import com.enigma.qerispay.dto.entity.CustomerDTO;
 import com.enigma.qerispay.entiy.Customer;
-import com.enigma.qerispay.entiy.Wallet;
 import com.enigma.qerispay.repository.CustomerRepository;
 import com.enigma.qerispay.service.entity.CustomerService;
 import com.enigma.qerispay.service.security.RoleService;
-import com.enigma.qerispay.service.entity.WalletService;
 import com.enigma.qerispay.utils.constant.NotFoundConstant;
 import com.enigma.qerispay.utils.exception.DataNotFoundException;
 import lombok.AllArgsConstructor;
@@ -20,15 +18,11 @@ import java.util.List;
 public class CustomerServiceImpl implements CustomerService {
 
     CustomerRepository customerRepository;
-    WalletService walletService;
     RoleService roleService;
 
     @Override
     @Transactional
     public Customer saveCustomer(Customer customer) {
-        Customer savedCustomer = customerRepository.save(customer);
-        Wallet addWallet = walletService.saveWallet(savedCustomer.getWallet());
-        savedCustomer.setWallet(addWallet);
         return customerRepository.save(customer);
     }
 
@@ -40,6 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setPassword(customerOld.getPassword());
             customer.setUsername(customerOld.getUsername());
             customer.setEnabled(customerOld.isEnabled());
+            customer.setRoles(customerOld.getRoles());
             Customer customerSaved = saveCustomer(customer);
             return new CustomerDTO(customerSaved);
         } else {
